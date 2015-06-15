@@ -163,6 +163,20 @@ define(function (require, exports) {
             });
     };
 
+    var _getLayersForDocumentRef = function (docRef, startIndex) {
+        var requiredPropertiesPromise = descriptor.getPropertiesRange(docRef, _layerProperties, "layer", startIndex, -1, {
+            failOnMissingProperty: true
+        });
+
+        var optionalPropertiesPromise = descriptor.getPropertiesRange(docRef, _optionalLayerProperties, "layer", startIndex, -1, {
+            failOnMissingProperty: false
+        });
+
+        return Promise.join(requiredPropertiesPromise, optionalPropertiesPromise, function (required, optional) {
+            return _.zipWith(required, optional, _.merge);
+        });
+    };
+
     /**
      * Get the ordered list of layer IDs for the given Document ID.
      *
@@ -1709,6 +1723,7 @@ define(function (require, exports) {
     exports.onReset = onReset;
 
     exports._getLayersByRef = _getLayersByRef;
+    exports._getLayersForDocumentRef = _getLayersForDocumentRef;
     exports._verifyLayerSelection = _verifyLayerSelection;
     exports._verifyLayerIndex = _verifyLayerIndex;
 });
