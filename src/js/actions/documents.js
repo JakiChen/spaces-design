@@ -164,7 +164,7 @@ define(function (require, exports) {
             .then(function (layers) {
                 return {
                     document: doc,
-                    layers: layers
+                    layers: layers.reverse()
                 };
             });
     };
